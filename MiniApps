@@ -1,0 +1,129 @@
+print("""In this program, you can choose from several little 'apps':
+
+Calc - Simple calculator doing basic operations on two numbers. 
+Pangram - see how many times each letter is represented in your text and whether it is a pangram (has all the letters)
+Roman - convert Roman numerals to Arabic numbers""")
+
+def letter_count_pangram(text):
+  '''takes a text as a parameter and then analyze how many times each letter is found in it and whether it's a pangram'''
+  letter_dict = {}
+  for i in range(65, 91, 1):
+    letter_dict[chr(i)] = 0
+  for n in range(len(text)):
+    for x in letter_dict:
+      if text[n] == x:
+        letter_dict[x] += 1
+  pan = 1
+  for key in letter_dict:
+    pan *= letter_dict[key]
+    print(f'{key}: {letter_dict[key]}')
+  # or with this - in this case the 0 value would mean it's a pangram, the rest it is not
+  pan2 = sum(value == 0 for value in letter_dict.values())
+  if pan == 0:
+    if pan2 == 1:
+      print(f'The text is not a pangram. It is missing {pan2} letter.')
+    else:
+      print(f'The text is not a pangram. It is missing {pan2} letters.')
+  else:
+    print('The text is a pangram, i.e. all the letters of the English alphabet are in it!')
+
+def rom_to_arabic(rom):
+  '''2. takes a Roman numeral as a parameter and returns its Arabic equivalent, 1-3999'''
+  translate= {'I':1, 'V':5, 'X':10, 'L':50, 'C':100, 'D':500, 'M':1000}
+  #splitting the string into single digits
+  split_rom = [*rom]
+  #'translating' the letters to their arabic equivalent
+  for i in range(len(split_rom)):
+    for key in translate:
+      if key == split_rom[i]:
+       split_rom[i] = translate[key]
+    # adding them all together
+  arabic = 0
+  for i in range(len(split_rom)):
+    arabic += split_rom[i]
+  # BUT! this method above won't give correct results if problematic digits (9s and 4s) are present, correction is needed in those numbers:
+  if 'CM' in rom:
+    arabic -= 200
+  if 'CD' in rom:
+    arabic -= 200
+  if 'XC' in rom:
+    arabic -= 20
+  if 'XL' in rom:
+    arabic -= 20
+  if 'IX' in rom:
+    arabic -= 2
+  if 'IV' in rom:
+    arabic -= 2
+  return print(f'{rom} = {arabic}')
+
+def check_input_roman(x):
+  correct = True
+  for n in range(len(x)):
+      if roman_no[n] not in 'IVXLCDM':
+            correct = False
+  return correct
+
+def calc():
+  """Asks user for two numbers and a basic operand, returns the full equation and the result."""
+  while True:
+    try:
+      operand1 = float(input("\nEnter a number:    "))
+      break
+    except Exception:
+      print("Oops! That was not a valid number. Try again...")
+  while True:
+    print("""
+Enter what kind of operation you want to do:
+    +    for    addition
+    -    for    subtraction
+    /    for    division
+    *    for    multiplication""")
+    operator = input()
+    if operator == "+" or operator == "-" or operator == "*" or operator == "/":
+      break
+    else:
+      print(f"Error! {operator} is not an allowed mathematical operator.")
+  while True:
+    try:
+      operand2 = float(input("\nEnter your second number:    "))
+      break
+    except Exception:
+      print("Oops! That was not a valid number. Try again...")
+  if operator == "+":
+    answer = operand1 + operand2
+  elif operator == "-":
+    answer = operand1 - operand2
+  elif operator == "/":
+    answer = operand1 / operand2
+  elif operator == "*":
+    answer = operand1 * operand2
+  print(f"\n{operand1} {operator} {operand2} = {answer}\n")
+
+
+
+command = input("""\nWrite the name of the app you want to use or type "exit" to close the program\n""").lower()
+
+while command != "exit":
+    
+    if command == "pangram":
+      string = input('Insert the text you want analysed here:    ').upper()
+      letter_count_pangram(string)
+
+    elif command == "roman":
+      while True:
+        roman_no = input('Insert a Roman number here:    ').upper()
+        correct = check_input_roman(roman_no)
+        if correct:
+          break
+        else:  
+          print('Error! Your input contains character(s) not used in Roman numbers.')      
+      rom_to_arabic(roman_no)
+
+    elif command == "calc" or command == "calculator":
+      calc()
+
+    command = input("What would you like to use next - Calc, Pangram or Roman (or exit)?    ").lower()
+
+print("""Thank you for 'playing'! Bye :)""")
+
+
